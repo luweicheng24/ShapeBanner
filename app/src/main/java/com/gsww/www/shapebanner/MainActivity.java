@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -25,20 +26,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ImageView img_bg;
     private Boolean isPlay=true;
     private ViewPager vp;
-    private int[] pic = {R.drawable.pic4, R.drawable.pic9,
-            R.drawable.pic17,  R.drawable.pic24,
-            R.drawable.pic4, R.drawable.pic9,
-            R.drawable.pic17,
-             R.drawable.pic24,
-            R.drawable.pic4, R.drawable.pic9,
-            R.drawable.pic17,
-           R.drawable.pic24,
-            R.drawable.pic4, R.drawable.pic9,
-            R.drawable.pic17,
-             R.drawable.pic24,
-            R.drawable.pic4, R.drawable.pic9,
-            R.drawable.pic17,
-           R.drawable.pic24};
+
     private List<View> mdata;
     private MyAdapter adapter;
     private MediaPlayer player;
@@ -60,8 +48,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         vp = (ViewPager) findViewById(R.id.viewPager);
         vp.setPageTransformer(true,new CustomPageTransform());
         initBlurPic();
-        initData();
-        player = MediaPlayer.create(this,R.raw.biye);
+        try {
+            loadPic();
+            initData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player = MediaPlayer.create(this,R.raw.shinian);
         try {
             player.setLooping(true);
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -91,13 +84,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void initData(){
-        mdata = new ArrayList<>();
-        for (int i = 0; i < pic.length; i++) {
+
+        /*for (int i = 0; i < pic.length; i++) {
             ImageView img = new ImageView(this);
             img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
             img.setBackgroundResource(pic[i]);
             mdata.add(img);
-        }
+        }*/
         int currentItem = getStartSelectItem();
         vp.setOffscreenPageLimit(5);
         adapter = new MyAdapter(this,mdata);
@@ -114,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public int getStartSelectItem() {
         int currentItem = Integer.MAX_VALUE/2;
-        if(currentItem%pic.length==0){
+        if(currentItem%list_image.length==0){
             return currentItem;
         }
-        while(currentItem%pic.length!=0){
+        while(currentItem%list_image.length!=0){
             currentItem++;
         }
 
@@ -175,9 +169,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         player.stop();
         isPlay=false;
     }
-
+ String[] list_image = null;
   private void loadPic() throws IOException {
-      InputStream is = getResources().getAssets().open("file:///android_asset/imgs/pic.1.jpg");
-      Bitmap bmp = BitmapFactory.decodeStream(is);
+      mdata = new ArrayList<>();
+      list_image = getAssets().list("imgs");
+
+      for (int i = 0; i <list_image.length; i++) {
+          Log.e("a", "loadPic: "+list_image[i] );
+          InputStream is = getResources().getAssets().open("imgs/"+list_image[i]);
+          Bitmap bmp = BitmapFactory.decodeStream(is);
+          ImageView img = new ImageView(this);
+          img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+          img.setImageBitmap(bmp);
+          mdata.add(img);
+
+      }
   }
 }

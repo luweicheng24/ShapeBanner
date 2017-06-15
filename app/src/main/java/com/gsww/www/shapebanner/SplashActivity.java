@@ -13,11 +13,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-
-import jp.wasabeef.glide.transformations.BlurTransformation;
-
 /**
  * Author   : luweicheng on 2017/6/15 0015 15:38
  * E-mail   ：1769005961@qq.com
@@ -38,10 +33,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         img = (ImageView) findViewById(R.id.img);
         title = (TextView) findViewById(R.id.tv_title);
-        Glide.with(this)
+       /* Glide.with(this)
                 .load(R.drawable.pic24)
                 .bitmapTransform(new BlurTransformation(this,5),new CenterCrop(this))
-                .into(img);
+                .into(img);*/
         initAnim();
         img.setAnimation(anim);
         title.setAnimation(scaleAnimation);
@@ -60,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initAnim() {
         anim = new AlphaAnimation(0, 1);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        anim.setDuration(5000);
+        anim.setDuration(6000);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
